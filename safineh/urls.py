@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.shortcuts import redirect
 from django.urls import include, path
 
 urlpatterns = [
@@ -12,8 +11,9 @@ urlpatterns = [
         "news/",
         include("news_module.urls"),
     ),
-    path('dashboard/',include('dashboard_module.urls')),
-    path('auth/',include('auth_module.urls')),
+    path('dashboard/', include('dashboard_module.urls')),
+    path('auth/', include('auth_module.urls')),
+    path('users/', include('users_module.urls', namespace='users_module')),   # ← این خط اضافه شد
     path('questions/', include('questions_module.urls')),
     path('quizzes/', include('quiz_module.urls')),
     path('', include("landing_module.urls")),
