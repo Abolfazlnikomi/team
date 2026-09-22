@@ -1,0 +1,381 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}وبلاگ{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: "#f3faf4",
+              100: "#d8f3dc",
+              300: "#95d5b2",
+              500: "#2d6a4f",
+              700: "#1b4332",
+              900: "#081c15"
+            }
+          },
+          fontFamily: { sans: ["Vazirmatn", "Tahoma", "sans-serif"] }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #f3faf6;
+      isolation: isolate;
+    }
+
+    main {
+      background: transparent;
+    }
+
+    .site-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    header,
+    main,
+    footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    .post-card,
+    .glass-cat,
+    .glass-cat-panel,
+    .post-cover,
+    .post-body-glass,
+    .post-media-frame {
+      position: relative;
+      z-index: 2;
+      isolation: isolate;
+    }
+
+    .post-media-stack {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin: 0 0 1.75rem;
+    }
+
+    .post-media-frame {
+      flex: 1 1 calc(50% - 0.75rem);
+      max-width: 30rem;
+      margin: 0;
+      line-height: 0;
+      overflow: hidden;
+      border-radius: 1.25rem;
+      background: transparent;
+    }
+
+    .post-media-frame:only-child {
+      flex: 1 1 100%;
+      max-width: 52rem;
+    }
+
+    .post-media {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 24rem;
+      object-fit: contain;
+      object-position: center;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      clip-path: inset(0 round 1.25rem);
+    }
+
+    .post-media-frame:only-child .post-media {
+      max-height: 34rem;
+    }
+
+    .post-cover,
+    .post-body-glass {
+      --glass-alpha: 0.22;
+      --glass-blur: 22px;
+      background: rgb(45 106 79 / var(--glass-alpha));
+      backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+      border: 1px solid rgb(255 255 255 / 0.35);
+      border-radius: 1.25rem;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .post-cover {
+      margin-bottom: 1.5rem;
+    }
+
+    .post-body-glass {
+      margin-top: 0.25rem;
+      line-height: 1.9;
+    }
+
+    .orb {
+      display: block;
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(140px);
+      opacity: 0.28;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    .orb-1 {
+      width: 34rem;
+      height: 34rem;
+      top: -10rem;
+      right: -8rem;
+      background: #008c2f;
+      animation: orb-zig 26s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 30rem;
+      height: 30rem;
+      bottom: -8rem;
+      left: -7rem;
+      background: #00a489;
+      animation: orb-drift 32s ease-in-out infinite;
+    }
+
+    .orb-3 {
+      width: 26rem;
+      height: 26rem;
+      top: 35%;
+      left: 30%;
+      background: #00fb8a;
+      animation: orb-cross 22s ease-in-out infinite;
+    }
+
+    @keyframes orb-zig {
+      0%   { transform: translate(0, 0); }
+      15%  { transform: translate(-28vw, 18vh); }
+      30%  { transform: translate(12vw, 36vh); }
+      45%  { transform: translate(-22vw, 8vh); }
+      60%  { transform: translate(26vw, 42vh); }
+      75%  { transform: translate(-10vw, 22vh); }
+      100% { transform: translate(0, 0); }
+    }
+
+    @keyframes orb-drift {
+      0%   { transform: translate(0, 0); }
+      20%  { transform: translate(30vw, -16vh); }
+      40%  { transform: translate(8vw, -38vh); }
+      60%  { transform: translate(-24vw, -12vh); }
+      80%  { transform: translate(18vw, -28vh); }
+      100% { transform: translate(0, 0); }
+    }
+
+    @keyframes orb-cross {
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(22vw, -20vh); }
+      50%  { transform: translate(-26vw, 18vh); }
+      75%  { transform: translate(16vw, 28vh); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .post-card {
+      background: rgb(255 255 255 / .62);
+    }
+
+    details.cat-menu > summary { list-style: none; }
+    details.cat-menu > summary::-webkit-details-marker { display: none; }
+
+    .glass-cat,
+    .glass-modal {
+      --glass-alpha: 0.22;
+      --glass-blur: 22px;
+      background: rgb(45 106 79 / var(--glass-alpha));
+      backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+      border: 1px solid rgb(255 255 255 / 0.35);
+    }
+
+    .glass-cat-panel {
+      --glass-alpha: 0.22;
+      --glass-blur: 22px;
+      background: rgb(45 106 79 / var(--glass-alpha));
+      backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+      border: 1px solid rgb(255 255 255 / 0.35);
+    }
+
+    :root { --ink: #102d22; --green: #197a50; --mint: #dff7e8; }
+    * { box-sizing: border-box; }
+    body { color: var(--ink); background: radial-gradient(circle at 10% 0%, #effff4 0, #f7fcf8 42%, #eef8f1 100%); }
+    body::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .28; background-image: linear-gradient(rgb(25 122 80 / .035) 1px, transparent 1px), linear-gradient(90deg, rgb(25 122 80 / .035) 1px, transparent 1px); background-size: 42px 42px; mask-image: linear-gradient(to bottom, black, transparent 80%); }
+    header { margin: 1rem auto 0; width: min(100% - 2rem, 70rem); border: 1px solid rgb(255 255 255 / .8) !important; border-radius: 1.5rem; background: rgb(255 255 255 / .64) !important; box-shadow: 0 18px 55px rgb(27 106 70 / .12); backdrop-filter: blur(22px) saturate(150%); }
+    header > div:first-child { min-height: 4.5rem; }
+    header a, header button { transition: color .25s ease, background .25s ease, transform .25s ease, box-shadow .25s ease; }
+    header a:hover, header button:hover { color: #0b8d55; transform: translateY(-2px); }
+    .post-card, .post-cover, .post-body-glass, .glass-cat, .glass-cat-panel { border-radius: 1.5rem !important; box-shadow: 0 14px 35px rgb(27 106 70 / .10); }
+    .post-card { overflow: hidden; background: rgb(255 255 255 / .62); border: 1px solid rgb(255 255 255 / .85); backdrop-filter: blur(18px); transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease; }
+    .post-card:hover { transform: translateY(-8px) scale(1.015); border-color: rgb(66 190 126 / .65); box-shadow: 0 22px 48px rgb(25 122 80 / .2), 0 0 0 1px rgb(91 224 153 / .16); }
+    .post-card img { transition: transform .6s ease, filter .6s ease; }
+    .post-card:hover img { transform: scale(1.06); filter: saturate(1.12); }
+    .post-card { animation: card-enter .7s both; }
+    .post-card:nth-child(2) { animation-delay: .08s; }
+    .post-card:nth-child(3) { animation-delay: .16s; }
+    .post-card:nth-child(4) { animation-delay: .24s; }
+    .post-card:nth-child(5) { animation-delay: .32s; }
+    .post-card:nth-child(6) { animation-delay: .4s; }
+    @keyframes card-enter { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .icon-button { transition: transform .25s ease, color .25s ease, background .25s ease, box-shadow .25s ease; }
+    .icon-button:hover { background: #e3f8eb; box-shadow: 0 10px 24px rgb(25 122 80 / .18); }
+    .post-chip { border: 1px solid rgb(25 122 80 / .13); background: rgb(255 255 255 / .58); transition: all .25s ease; }
+    .post-chip:hover, .post-chip.is-active { color: white; background: linear-gradient(135deg, #239466, #12623f); box-shadow: 0 8px 22px rgb(25 122 80 / .2); transform: translateY(-2px); }
+    .cursor-glow { position: fixed; z-index: 60; width: 190px; height: 190px; border-radius: 50%; pointer-events: none; opacity: 0; background: radial-gradient(circle, rgb(92 230 153 / .2), transparent 68%); transform: translate(-50%, -50%); transition: opacity .3s ease; mix-blend-mode: multiply; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } .cursor-glow { display: none; } }
+  </style>
+</head>
+<body class="min-h-screen font-sans text-brand-900">
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+  <div class="site-bg" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <header class="sticky top-0 z-50 border-b border-brand-100 bg-white/90">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3" dir="rtl">
+
+      <div class="flex items-center gap-5" dir="rtl">
+        <a href="{% url 'blog:post_list' %}" class="flex items-center gap-2 font-extrabold text-brand-700">
+          <i class="fa-solid fa-leaf"></i>
+          <span>سفینه</span>
+        </a>
+
+        <nav class="hidden items-center gap-5 text-sm md:flex">
+          <a href="{% url 'blog:post_list' %}">خانه</a>
+          <button type="button" onclick="openModal()">درباره</button>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-2" dir="rtl">
+        <div class="relative">
+          <button id="search-toggle" type="button" aria-label="جستجو"
+                  class="icon-button grid h-10 w-10 place-items-center rounded-full border border-brand-100 bg-white text-brand-700">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <form id="search-form" action="{% url 'blog:post_search' %}" method="get"
+                class="absolute left-0 top-full z-50 mt-2 hidden w-72">
+            <input type="search" name="q" value="{{ query|default:'' }}" required
+                   placeholder="جستجوی پست یا تگ..."
+                   class="w-full rounded-2xl border border-brand-100 bg-white px-4 py-2 text-sm shadow-md outline-none">
+          </form>
+        </div>
+
+        <details class="cat-menu relative">
+          <summary class="glass-cat cursor-pointer rounded-full px-4 py-2 text-sm text-brand-900">
+            <i class="fa-solid fa-layer-group ml-1 text-brand-500"></i> دسته‌بندی‌ها
+            <i class="fa-solid fa-chevron-down mr-1 text-xs"></i>
+          </summary>
+          <div class="glass-cat-panel absolute left-0 z-50 mt-2 min-w-52 overflow-hidden rounded-2xl p-2 shadow-xl">
+            <a href="{% url 'blog:post_list' %}" class="block rounded-xl px-3 py-2 text-sm hover:bg-white/60">همه مطالب</a>
+            {% for c in categories %}
+              <a href="{% url 'blog:category_posts' c.slug %}" class="block rounded-xl px-3 py-2 text-sm hover:bg-white/60">{{ c.name }}</a>
+            {% empty %}
+              <span class="block px-3 py-2 text-sm opacity-70">دسته‌ای ثبت نشده</span>
+            {% endfor %}
+          </div>
+        </details>
+
+        <button type="button"
+                class="grid h-10 w-10 place-items-center rounded-full border border-brand-100 bg-white md:hidden"
+                onclick="document.getElementById('mobileNav').classList.toggle('hidden')">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobileNav" class="hidden space-y-2 border-t border-brand-100 px-4 py-3 md:hidden">
+      <a class="block" href="{% url 'blog:post_list' %}">خانه</a>
+      <button type="button" onclick="openModal()">درباره</button>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 py-8">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="mt-16 border-t border-brand-100 px-4 py-8">
+    <div class="mx-auto max-w-6xl text-center text-sm leading-7 text-brand-700">
+      <p class="font-bold">وبلاگ موسسه سفینه النجاه</p>
+      <p>تمامی حقوق مادی و معنوی این وبلاگ متعلق به موسسه سفینه النجاه است.</p>
+      <p>هرگونه کپی، بازنشر یا استفاده از مطالب، بدون اجازه کتبی موسسه ممنوع است.</p>
+      <p class="mt-2 opacity-80">© ۱۴۰۵ موسسه سفینه النجاه. کلیه حقوق محفوظ است.</p>
+    </div>
+  </footer>
+
+  <div id="aboutModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-brand-900/25 backdrop-blur-md" onclick="closeModal()"></div>
+    <div class="glass-modal relative z-10 w-full max-w-md rounded-2xl p-6 shadow-xl text-brand-900">
+      <div class="mb-4 flex items-center justify-between">
+        <h2 class="text-lg font-bold"><i class="fa-solid fa-circle-info text-brand-500"></i> درباره وبلاگ</h2>
+        <button type="button" onclick="closeModal()" class="text-xl">&times;</button>
+      </div>
+      <p class="leading-7">وبلاگ سایت xyz موسسه سفینه النجاه.</p>
+      <button type="button" onclick="closeModal()" class="mt-5 w-full rounded-xl bg-brand-500 py-2 text-white">باشه</button>
+    </div>
+  </div>
+
+  <script>
+    const searchToggle = document.getElementById("search-toggle");
+    const searchForm = document.getElementById("search-form");
+
+    if (searchToggle && searchForm) {
+      searchToggle.addEventListener("click", function (e) {
+        e.stopPropagation();
+        searchForm.classList.toggle("hidden");
+        const input = searchForm.querySelector("input");
+        if (!searchForm.classList.contains("hidden") && input) input.focus();
+      });
+
+      document.addEventListener("click", function (e) {
+        if (!searchForm.contains(e.target) && !searchToggle.contains(e.target)) {
+          searchForm.classList.add("hidden");
+        }
+      });
+    }
+
+    function openModal() {
+      const m = document.getElementById("aboutModal");
+      if (!m) return;
+      m.classList.remove("hidden");
+      m.classList.add("flex");
+    }
+
+    function closeModal() {
+      const m = document.getElementById("aboutModal");
+      if (!m) return;
+      m.classList.add("hidden");
+      m.classList.remove("flex");
+    }
+
+    const cursorGlow = document.getElementById("cursorGlow");
+    if (cursorGlow && window.matchMedia("(pointer:fine)").matches) {
+      window.addEventListener("pointermove", (event) => {
+        cursorGlow.style.left = event.clientX + "px";
+        cursorGlow.style.top = event.clientY + "px";
+        cursorGlow.style.opacity = "1";
+      }, { passive: true });
+      document.addEventListener("mouseleave", () => cursorGlow.style.opacity = "0");
+    }
+  </script>
+</body>
+</html>
