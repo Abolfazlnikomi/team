@@ -19,7 +19,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "fanooslms.ir"
+    "panjeheaftab.ir"
 ]
 
 
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "plans_module",
     "counseling_module",
     "reports_module",
+    "classroom_module",
 ]
 
 
@@ -82,6 +83,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "dashboard_module.context_processors.fanous_shell",
             ],
         },
     },
@@ -190,7 +192,7 @@ MESSAGE_TAGS = {
 }
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://fanooslms.ir",
+    'https://panjeheaftab.ir',
     "http://127.0.0.1:8030",
     "http://localhost:8030"
 ]
